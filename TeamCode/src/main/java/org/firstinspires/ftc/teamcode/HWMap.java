@@ -14,6 +14,8 @@ public class HWMap {
     public DcMotor fRightWheel = null; //control hub port0
     public DcMotor bLeftWheel = null; //expansion hub port1
     public DcMotor bRightWheel = null; //control hub port1
+    public DcMotorEx intakeMotorIn = null;
+    public DcMotorEx intakeMotorUp = null;
 
 
     public void init(HardwareMap hwMap) {
@@ -21,6 +23,8 @@ public class HWMap {
         fRightWheel = hwMap.dcMotor.get("rf");
         bLeftWheel = hwMap.dcMotor.get("lr");
         bRightWheel = hwMap.dcMotor.get("rr");
+        intakeMotorIn = hwMap.get(DcMotorEx.class, "intakeMotorIn");
+        intakeMotorUp = hwMap.get(DcMotorEx.class, "intakeMotorUp");
 
         fRightWheel.setDirection(DcMotor.Direction.REVERSE);
         fLeftWheel.setDirection(DcMotor.Direction.FORWARD);
