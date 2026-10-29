@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,7 +13,18 @@ public class teleop extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
+        boolean isSpinning = false;
+        int ticksPerRev = 28;
+        double targetRPM = 0;
+        double rpmStep = 1000; // 500 RPM per tap
+        double maxRPM = 6000; // motor max free speed
+        double minRPM = 0;    // optional lower bound
+
+        boolean lastUp = false;
+        boolean lastDown = false;
+
         double driveSpeed = 1;
+
 
         while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y;
@@ -33,22 +43,62 @@ public class teleop extends LinearOpMode {
             robot.bRightWheel.setPower(backRightPower * driveSpeed);
 
             if (gamepad1.a){
-                robot.intakeMotorIn.setPower(1);
-                robot.intakeMotorUp.setPower(1);
+                robot.intakeMotorIn.setPower(-.5);
+                robot.intakeMotorUp.setPower(-.5);
+                robot.servo1.setPosition(0);
+            }else if (gamepad1.b){
+                robot.servo1.setPosition(0.2);
+                robot.intakeMotorIn.setPower(-.5);
+                robot.intakeMotorUp.setPower(-.5);
             }
             else if (gamepad1.y){
-                robot.intakeMotorIn.setPower(-0.3);
-                robot.intakeMotorUp.setPower(-0.3);
+                robot.intakeMotorIn.setPower(0.5);
+                robot.intakeMotorUp.setPower(.5);
+                robot.servo1.setPosition(0);
             }
             else{
+                robot.servo1.setPosition(0);
                 robot.intakeMotorIn.setPower(0);
                 robot.intakeMotorUp.setPower(0);
             }
 
+            boolean upPressed = gamepad1.dpad_up;
+            boolean downPressed = gamepad1.dpad_down;
+
+            if (upPressed && !lastUp) {
+                targetRPM += rpmStep;
+                targetRPM = Math.min(targetRPM, maxRPM);
+            }
+
+            if (downPressed && !lastDown) {
+                targetRPM -= rpmStep;
+                targetRPM = Math.max(targetRPM, minRPM);
+            }
+
+            if (gamepad1.dpad_left){
+                targetRPM = 0;
+            }
+
+
+
+
+            lastUp = upPressed;
+            lastDown = downPressed;
+
+            double targetTicksPerSec = targetRPM / 60.0 * ticksPerRev;
+
+            robot.flywheelP.setVelocity(targetTicksPerSec);
+            double currentRPM = robot.flywheelP.getVelocity() / ticksPerRev * 60.0;
+            robot.flywheelN.setVelocity(targetTicksPerSec);
+            double currentRPMN = robot.flywheelN.getVelocity() / ticksPerRev * 60.0;
+
+
+
+            telemetry.addData("TargetRPM", targetRPM);
+            telemetry.addData("CurrentRPM", currentRPM);
+            telemetry.addData("CurrentRPMN", currentRPMN);
+            telemetry.update();
 
         }
-
-
     }
-
 }
