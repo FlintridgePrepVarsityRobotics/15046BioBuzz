@@ -15,21 +15,27 @@ public class HWMap {
     public DcMotor bLeftWheel = null; //expansion hub port1
     public DcMotor bRightWheel = null; //control hub port1
     public DcMotorEx intakeMotorIn = null;
-    public DcMotorEx intakeMotorUp = null;
+//    public DcMotorEx intakeMotorUp = null;
     public DcMotorEx flywheelP = null;
     public DcMotorEx flywheelN = null;
 
     public Servo servo1 = null;
+    public Servo servo2 = null;
+    public Servo servo3 = null;
     public void init(HardwareMap hwMap) {
         fLeftWheel = hwMap.dcMotor.get("lf");
         fRightWheel = hwMap.dcMotor.get("rf");
         bLeftWheel = hwMap.dcMotor.get("lr");
         bRightWheel = hwMap.dcMotor.get("rr");
         intakeMotorIn = hwMap.get(DcMotorEx.class, "intakeMotorIn");
-        intakeMotorUp = hwMap.get(DcMotorEx.class, "intakeMotorUp");
+//        intakeMotorUp = hwMap.get(DcMotorEx.class, "intakeMotorUp");
         flywheelP = hwMap.get(DcMotorEx.class, "flywheelP");
         flywheelN = hwMap.get(DcMotorEx.class, "flywheelN");
         servo1 = hwMap.servo.get("Servo");
+        servo2 = hwMap.servo.get("Servo2");
+        servo3 = hwMap.servo.get("Servo3");
+
+
 
         fRightWheel.setDirection(DcMotor.Direction.REVERSE);
         fLeftWheel.setDirection(DcMotor.Direction.FORWARD);
@@ -59,8 +65,11 @@ public class HWMap {
         bRightWheel.setPower(0);
         bLeftWheel.setPower(0);
         intakeMotorIn.setPower(0);
-        intakeMotorUp.setPower(0);
+//        intakeMotorUp.setPower(0);
         flywheelP.setPower(0);
         flywheelN.setPower(0);
+        servo1.setPosition(1);
+        servo2.setPosition(0);
+        servo3.setPosition(0);
     }
 }

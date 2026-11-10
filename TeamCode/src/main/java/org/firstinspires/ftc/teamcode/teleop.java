@@ -22,6 +22,13 @@ public class teleop extends LinearOpMode {
 
         boolean lastUp = false;
         boolean lastDown = false;
+        boolean servoOpen = false;
+        boolean lastLeftBumper = false;
+
+        boolean lastUp2 = false;
+        boolean lastDown2 = false;
+        boolean servoOpen2 = false;
+        boolean lastLeftBumper2 = false;
 
         double driveSpeed = 1;
 
@@ -44,24 +51,42 @@ public class teleop extends LinearOpMode {
 
             if (gamepad1.a){
                 robot.intakeMotorIn.setPower(-.5);
-                robot.intakeMotorUp.setPower(-.5);
-                robot.servo1.setPosition(0);
             }else if (gamepad1.b){
-                robot.servo1.setPosition(0.2);
                 robot.intakeMotorIn.setPower(-.5);
-                robot.intakeMotorUp.setPower(-.5);
             }
             else if (gamepad1.y){
                 robot.intakeMotorIn.setPower(0.5);
-                robot.intakeMotorUp.setPower(.5);
-                robot.servo1.setPosition(0);
             }
             else{
-                robot.servo1.setPosition(0);
                 robot.intakeMotorIn.setPower(0);
-                robot.intakeMotorUp.setPower(0);
             }
 
+            boolean currentLeftBumper = gamepad1.left_bumper;
+
+            if (currentLeftBumper && !lastLeftBumper) {
+                servoOpen = !servoOpen;
+
+                if (servoOpen) {
+                    robot.servo1.setPosition(0.3);
+                    robot.servo2.setPosition(0.7);
+                } else {
+                    robot.servo1.setPosition(0.7);
+                    robot.servo2.setPosition(0.3);
+                }
+            }
+            boolean currentLeftBumper2 = gamepad1.right_bumper;
+
+            if (currentLeftBumper2 && !lastLeftBumper2) {
+                servoOpen2 = !servoOpen2;
+
+                if (servoOpen2) {
+                    robot.servo3.setPosition(0);
+                } else {
+                    robot.servo3.setPosition(1);
+                }
+            }
+
+            lastLeftBumper = currentLeftBumper;
             boolean upPressed = gamepad1.dpad_up;
             boolean downPressed = gamepad1.dpad_down;
 
