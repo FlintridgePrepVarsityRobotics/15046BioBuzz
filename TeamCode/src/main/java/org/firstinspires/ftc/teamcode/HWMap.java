@@ -30,9 +30,9 @@ public class HWMap {
         intakeMotorIn = hwMap.get(DcMotorEx.class, "intakeMotorIn");
 //        intakeMotorUp = hwMap.get(DcMotorEx.class, "intakeMotorUp");
         flywheelP = hwMap.get(DcMotorEx.class, "flywheelP");
-        flywheelN = hwMap.get(DcMotorEx.class, "flywheelN");
-        servo1 = hwMap.servo.get("Servo");
-        servo2 = hwMap.servo.get("Servo2");
+//        flywheelN = hwMap.get(DcMotorEx.class, "flywheelN");
+        servo1 = hwMap.servo.get("servo1");
+        servo2 = hwMap.servo.get("servo2");
         servo3 = hwMap.servo.get("Servo3");
 
 
@@ -42,8 +42,8 @@ public class HWMap {
         bRightWheel.setDirection(DcMotor.Direction.REVERSE);
         bLeftWheel.setDirection(DcMotor.Direction.FORWARD);
 
-        flywheelP.setDirection(DcMotor.Direction.FORWARD);
-        flywheelN.setDirection(DcMotor.Direction.REVERSE);
+        flywheelP.setDirection(DcMotor.Direction.REVERSE);
+//        flywheelN.setDirection(DcMotor.Direction.REVERSE);
 
         fRightWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fLeftWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -67,9 +67,7 @@ public class HWMap {
         intakeMotorIn.setPower(0);
 //        intakeMotorUp.setPower(0);
         flywheelP.setPower(0);
-        flywheelN.setPower(0);
-        servo1.setPosition(1);
-        servo2.setPosition(0);
+//        flywheelN.setPower(0);
         servo3.setPosition(0);
     }
 }

@@ -16,22 +16,33 @@ public class teleop extends LinearOpMode {
         boolean isSpinning = false;
         int ticksPerRev = 28;
         double targetRPM = 0;
-        double rpmStep = 1000; // 500 RPM per tap
+        double rpmStep = 500; // 500 RPM per tap
         double maxRPM = 6000; // motor max free speed
         double minRPM = 0;    // optional lower bound
 
         boolean lastUp = false;
         boolean lastDown = false;
-        boolean servoOpen = false;
+        int servoState = 0;
         boolean lastLeftBumper = false;
 
         boolean lastUp2 = false;
         boolean lastDown2 = false;
         boolean servoOpen2 = false;
-        boolean lastLeftBumper2 = false;
+        boolean lastRightBumper = false;
+
+        double intakeState = 0;
+
+        boolean lastA = false;
+        boolean lastB = false;
+        boolean lastY = false;
 
         double driveSpeed = 1;
 
+        long lastServoToggleTime = 0;
+        long lastServo3ToggleTime = 0;
+        long servoCooldown = 400;
+        long lastIntakeToggleTime = 0;
+        long intakeCooldown = 400;
 
         while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y;
@@ -49,49 +60,78 @@ public class teleop extends LinearOpMode {
             robot.fRightWheel.setPower(frontRightPower * driveSpeed);
             robot.bRightWheel.setPower(backRightPower * driveSpeed);
 
-            if (gamepad1.a){
-                robot.intakeMotorIn.setPower(-.5);
-            }else if (gamepad1.b){
-                robot.intakeMotorIn.setPower(-.5);
+            boolean aPressed = gamepad1.a && !lastA;
+            boolean bPressed = gamepad1.b && !lastB;
+            boolean yPressed = gamepad1.y && !lastY;
+
+            if (System.currentTimeMillis() - lastIntakeToggleTime >= intakeCooldown) {
+
+                if (aPressed || bPressed) {
+                    intakeState = (intakeState == 1) ? 0 : 1;
+                    lastIntakeToggleTime = System.currentTimeMillis();
+                }
+                else if (yPressed) {
+                    intakeState = (intakeState == -.3) ? 0 : -.3;
+                    lastIntakeToggleTime = System.currentTimeMillis();
+                }
             }
-            else if (gamepad1.y){
-                robot.intakeMotorIn.setPower(0.5);
-            }
-            else{
-                robot.intakeMotorIn.setPower(0);
-            }
+
+            robot.intakeMotorIn.setPower(intakeState);
+
+            lastA = gamepad1.a;
+            lastB = gamepad1.b;
+            lastY = gamepad1.y;
+
 
             boolean currentLeftBumper = gamepad1.left_bumper;
 
-            if (currentLeftBumper && !lastLeftBumper) {
-                servoOpen = !servoOpen;
+            if (currentLeftBumper && !lastLeftBumper
+                    && System.currentTimeMillis() - lastServoToggleTime >= servoCooldown) {
 
-                if (servoOpen) {
-                    robot.servo1.setPosition(0.3);
-                    robot.servo2.setPosition(0.7);
-                } else {
+                servoState = (servoState + 1) % 3;
+
+                if (servoState == 0) {
                     robot.servo1.setPosition(0.7);
-                    robot.servo2.setPosition(0.3);
+                    robot.servo2.setPosition(0.2);
                 }
-            }
-            boolean currentLeftBumper2 = gamepad1.right_bumper;
+                else if (servoState == 1) {
+                    robot.servo1.setPosition(0.1);
+                    robot.servo2.setPosition(0.75);
+                }
+                else if (servoState == 2) {
+                    robot.servo1.setPosition(0.3);
+                    robot.servo2.setPosition(0.5);
+                }
 
-            if (currentLeftBumper2 && !lastLeftBumper2) {
+                lastServoToggleTime = System.currentTimeMillis();
+            }
+
+            lastLeftBumper = currentLeftBumper;
+
+            boolean currentRightBumper = gamepad1.right_bumper;
+
+            if (currentRightBumper && !lastRightBumper
+                    && System.currentTimeMillis() - lastServo3ToggleTime >= servoCooldown) {
+
                 servoOpen2 = !servoOpen2;
 
                 if (servoOpen2) {
                     robot.servo3.setPosition(0);
                 } else {
-                    robot.servo3.setPosition(1);
+                    robot.servo3.setPosition(0.2);
                 }
+
+                lastServo3ToggleTime = System.currentTimeMillis();
             }
+
+            lastRightBumper = currentRightBumper;
 
             lastLeftBumper = currentLeftBumper;
             boolean upPressed = gamepad1.dpad_up;
             boolean downPressed = gamepad1.dpad_down;
 
             if (upPressed && !lastUp) {
-                targetRPM += rpmStep;
+                targetRPM = 2700;
                 targetRPM = Math.min(targetRPM, maxRPM);
             }
 
@@ -104,9 +144,6 @@ public class teleop extends LinearOpMode {
                 targetRPM = 0;
             }
 
-
-
-
             lastUp = upPressed;
             lastDown = downPressed;
 
@@ -114,14 +151,14 @@ public class teleop extends LinearOpMode {
 
             robot.flywheelP.setVelocity(targetTicksPerSec);
             double currentRPM = robot.flywheelP.getVelocity() / ticksPerRev * 60.0;
-            robot.flywheelN.setVelocity(targetTicksPerSec);
-            double currentRPMN = robot.flywheelN.getVelocity() / ticksPerRev * 60.0;
+//            robot.flywheelN.setVelocity(targetTicksPerSec);
+//            double currentRPMN = robot.flywheelN.getVelocity() / ticksPerRev * 60.0;
 
 
 
             telemetry.addData("TargetRPM", targetRPM);
             telemetry.addData("CurrentRPM", currentRPM);
-            telemetry.addData("CurrentRPMN", currentRPMN);
+//            telemetry.addData("CurrentRPMN", currentRPMN);
             telemetry.update();
 
         }
