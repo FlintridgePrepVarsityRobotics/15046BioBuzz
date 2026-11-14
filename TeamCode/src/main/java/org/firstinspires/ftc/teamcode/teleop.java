@@ -97,8 +97,8 @@ public class teleop extends LinearOpMode {
                     robot.leftservo.setPosition(0.2);
                 }
                 else if (servoState == 1) {//upstate
-                    robot.rightservo.setPosition(0);
-                    robot.leftservo.setPosition(0.78);
+                    robot.rightservo.setPosition(0.05);
+                    robot.leftservo.setPosition(0.72);
                 }
                 else if (servoState == 2) {//midstate
                     robot.rightservo.setPosition(0.6);

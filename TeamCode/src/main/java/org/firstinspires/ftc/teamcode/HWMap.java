@@ -70,7 +70,7 @@ public class HWMap {
 //        flywheelN.setPower(0);
         servo3.setPosition(0);
 
-        rightservo.setPosition(0);
-        leftservo.setPosition(0.78);
+        rightservo.setPosition(0.05);
+        leftservo.setPosition(0.72);
     }
 }
