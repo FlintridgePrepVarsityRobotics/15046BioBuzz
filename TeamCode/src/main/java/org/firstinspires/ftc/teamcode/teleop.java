@@ -71,7 +71,7 @@ public class teleop extends LinearOpMode {
                     lastIntakeToggleTime = System.currentTimeMillis();
                 }
                 else if (yPressed) {
-                    intakeState = (intakeState == -.3) ? 0 : -.3;
+                    intakeState = (intakeState == -.6) ? 0 : -.6;
                     lastIntakeToggleTime = System.currentTimeMillis();
                 }
             }
@@ -89,18 +89,20 @@ public class teleop extends LinearOpMode {
                     && System.currentTimeMillis() - lastServoToggleTime >= servoCooldown) {
 
                 servoState = (servoState + 1) % 3;
+                telemetry.addData("servostate", servoState);
+                telemetry.update();
 
-                if (servoState == 0) {
-                    robot.servo1.setPosition(0.7);
-                    robot.servo2.setPosition(0.2);
+                if (servoState == 0) {//downstate
+                    robot.rightservo.setPosition(0.65);
+                    robot.leftservo.setPosition(0.2);
                 }
-                else if (servoState == 1) {
-                    robot.servo1.setPosition(0.1);
-                    robot.servo2.setPosition(0.75);
+                else if (servoState == 1) {//upstate
+                    robot.rightservo.setPosition(0);
+                    robot.leftservo.setPosition(0.78);
                 }
-                else if (servoState == 2) {
-                    robot.servo1.setPosition(0.3);
-                    robot.servo2.setPosition(0.5);
+                else if (servoState == 2) {//midstate
+                    robot.rightservo.setPosition(0.6);
+                    robot.leftservo.setPosition(0.3);
                 }
 
                 lastServoToggleTime = System.currentTimeMillis();

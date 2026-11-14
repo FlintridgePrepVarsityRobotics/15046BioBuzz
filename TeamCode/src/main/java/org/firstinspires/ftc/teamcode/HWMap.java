@@ -19,8 +19,8 @@ public class HWMap {
     public DcMotorEx flywheelP = null;
     public DcMotorEx flywheelN = null;
 
-    public Servo servo1 = null;
-    public Servo servo2 = null;
+    public Servo rightservo = null;
+    public Servo leftservo = null;
     public Servo servo3 = null;
     public void init(HardwareMap hwMap) {
         fLeftWheel = hwMap.dcMotor.get("lf");
@@ -31,8 +31,8 @@ public class HWMap {
 //        intakeMotorUp = hwMap.get(DcMotorEx.class, "intakeMotorUp");
         flywheelP = hwMap.get(DcMotorEx.class, "flywheelP");
 //        flywheelN = hwMap.get(DcMotorEx.class, "flywheelN");
-        servo1 = hwMap.servo.get("servo1");
-        servo2 = hwMap.servo.get("servo2");
+        rightservo = hwMap.servo.get("servo1");
+        leftservo = hwMap.servo.get("servo2");
         servo3 = hwMap.servo.get("Servo3");
 
 
@@ -69,5 +69,8 @@ public class HWMap {
         flywheelP.setPower(0);
 //        flywheelN.setPower(0);
         servo3.setPosition(0);
+
+        rightservo.setPosition(0);
+        leftservo.setPosition(0.78);
     }
 }
